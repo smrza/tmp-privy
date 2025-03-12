@@ -32,14 +32,28 @@ const Wallet = () => {
       const wallet = wallets[0]
       const provider = await wallet.getEthereumProvider()
 
-      const transactionRequest = {
-        to: wallet.address,
-        value: 100000,
-      }
-
       const transactionHash = await provider.request({
-        method: "eth_sendTransaction",
-        params: [transactionRequest],
+        method: "wallet_sendCalls",
+        params: [
+          {
+            version: "1.0",
+            chainId: "0x2105",
+            from: wallet.address,
+            calls: [
+              {
+                to: "0x7d6E22db7C2Ee44859061061f99E55257A5cEaC1",
+                data: "0x0",
+                value: "0x01",
+              },
+            ],
+            capabilities: {
+              paymasterService: {
+                url: "https://api.developer.coinbase.com/rpc/v1/base/4DaEkyBGukHaREuvQJiYqJbcI7EXEApJ",
+                optional: true,
+              },
+            },
+          },
+        ],
       })
 
       console.log("transactionHash", transactionHash)
